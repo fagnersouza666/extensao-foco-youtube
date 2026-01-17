@@ -12,6 +12,13 @@ const DEFAULT_CONFIG = {
   }
 };
 
+const PRESET_LABELS = {
+  work: "Trabalho/Estudo",
+  moderate: "Moderado",
+  leisure: "Lazer",
+  custom: "Custom"
+};
+
 let config = { ...DEFAULT_CONFIG };
 let lastUrl = location.href;
 let applyTimer = null;
@@ -38,9 +45,15 @@ const isFocusActive = () => Boolean(config.enabled && !isSnoozed());
 
 const SHORTS_CSS = `
   ytd-guide-entry-renderer a[href^="/shorts"],
+  ytd-guide-entry-renderer a[title*="Shorts"],
   ytd-mini-guide-entry-renderer a[href^="/shorts"],
+  ytd-mini-guide-entry-renderer a[title*="Shorts"],
   ytd-reel-shelf-renderer,
   ytd-reel-shelf-renderer *,
+  ytd-reel-item-renderer,
+  ytd-shorts-shelf-renderer,
+  ytd-rich-grid-shelf-renderer[is-shorts],
+  ytd-rich-grid-shelf-renderer[is-shorts] *,
   ytd-rich-section-renderer ytd-rich-shelf-renderer[is-shorts],
   ytd-rich-section-renderer ytd-rich-shelf-renderer[is-shorts] * {
     display: none !important;
@@ -49,14 +62,16 @@ const SHORTS_CSS = `
 
 const HOME_CSS = `
   ytd-browse[page-subtype="home"] #contents,
-  ytd-browse[page-subtype="home"] ytd-rich-grid-renderer {
+  ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
+  ytd-two-column-browse-results-renderer[page-subtype="home"] #contents {
     display: none !important;
   }
 `;
 
 const WATCH_CSS = `
   #related,
-  ytd-watch-next-secondary-results-renderer {
+  ytd-watch-next-secondary-results-renderer,
+  ytd-secondary-results-renderer {
     display: none !important;
   }
 `;
@@ -98,26 +113,95 @@ const createOverlay = () => {
   el.style.cssText =
     "position: fixed; inset: 0; z-index: 999999;" +
     "display: flex; align-items: center; justify-content: center;" +
-    "background: rgba(10, 10, 10, 0.85); color: #fff;" +
-    "font-family: Arial, sans-serif;";
+    "background: radial-gradient(circle at 20% 20%, rgba(255, 214, 102, 0.15), transparent 45%)," +
+    "radial-gradient(circle at 80% 20%, rgba(80, 200, 190, 0.15), transparent 45%)," +
+    "rgba(10, 12, 16, 0.92);" +
+    "color: #f5f3ef;" +
+    "font-family: Trebuchet MS, Verdana, sans-serif;";
 
   el.innerHTML = `
-    <div style="max-width: 520px; padding: 24px; background: #111; border: 1px solid #333; border-radius: 12px; text-align: center;">
-      <h2 style="margin: 0 0 8px; font-size: 22px;">Modo Foco Ativo</h2>
-      <p style="margin: 0 0 16px; color: #bbb;">Use a busca ou va para Inscricoes.</p>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
-        <button data-action="search" style="padding: 8px 12px;">Buscar</button>
-        <button data-action="subs" style="padding: 8px 12px;">Inscricoes</button>
-        <button data-action="history" style="padding: 8px 12px;">Historico</button>
-        <button data-action="snooze" style="padding: 8px 12px;">Sonecar 10 min</button>
+    <style>
+      #yt-focus-overlay * { box-sizing: border-box; }
+      #yt-focus-overlay .ytf-card {
+        max-width: 560px;
+        padding: 28px;
+        background: linear-gradient(160deg, #14161a 0%, #0f1114 100%);
+        border: 1px solid #2a2f35;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+      }
+      #yt-focus-overlay .ytf-tag {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #222831;
+        color: #f7d774;
+        font-size: 12px;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      #yt-focus-overlay .ytf-title {
+        margin: 0 0 8px;
+        font-size: 22px;
+      }
+      #yt-focus-overlay .ytf-subtitle {
+        margin: 0 0 18px;
+        color: #c9c4bb;
+        font-size: 14px;
+      }
+      #yt-focus-overlay .ytf-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      #yt-focus-overlay .ytf-btn {
+        padding: 8px 12px;
+        border: 1px solid #2a2f35;
+        border-radius: 10px;
+        background: #1a1f25;
+        color: #f5f3ef;
+        cursor: pointer;
+      }
+      #yt-focus-overlay .ytf-btn.primary {
+        background: #f7d774;
+        color: #1b1b1b;
+        border-color: #f7d774;
+      }
+      #yt-focus-overlay .ytf-btn.danger {
+        background: #3a1a1a;
+        color: #f2b9b9;
+        border-color: #5a2626;
+      }
+      #yt-focus-overlay .ytf-note {
+        margin: 16px 0 0;
+        font-size: 12px;
+        color: #9da1a8;
+      }
+    </style>
+    <div class="ytf-card">
+      <div class="ytf-tag" data-role="preset">Trabalho/Estudo</div>
+      <h2 class="ytf-title">Modo Foco Ativo</h2>
+      <p class="ytf-subtitle">Escolha uma acao intencional para continuar.</p>
+      <div class="ytf-actions">
+        <button class="ytf-btn primary" data-action="search">Buscar</button>
+        <button class="ytf-btn" data-action="subs">Inscricoes</button>
+        <button class="ytf-btn" data-action="history">Historico</button>
+        <button class="ytf-btn danger" data-action="snooze">Sonecar 10 min</button>
       </div>
+      <p class="ytf-note">O modo foco volta automaticamente apos a soneca.</p>
     </div>
   `;
 
   el.addEventListener("click", (event) => {
     const action = event.target?.getAttribute?.("data-action");
     if (!action) return;
-    if (action === "search") focusSearch();
+    if (action === "search") {
+      removeOverlay();
+      setTimeout(focusSearch, 0);
+    }
     if (action === "subs") location.href = "/feed/subscriptions";
     if (action === "history") location.href = "/feed/history";
     if (action === "snooze") sendMessage({ type: "SNOOZE", minutes: 10 });
@@ -126,9 +210,17 @@ const createOverlay = () => {
   return el;
 };
 
+const updateOverlayPreset = () => {
+  if (!overlayEl) return;
+  const tag = overlayEl.querySelector("[data-role='preset']");
+  if (!tag) return;
+  tag.textContent = PRESET_LABELS[config.preset] || "Foco";
+};
+
 const ensureOverlay = () => {
   if (!overlayEl) overlayEl = createOverlay();
   if (!overlayEl.isConnected) document.body.appendChild(overlayEl);
+  updateOverlayPreset();
 };
 
 const removeOverlay = () => {
@@ -150,7 +242,8 @@ const disableAutoplay = () => {
   if (!config.rules.disableAutoplay) return;
   const toggle =
     document.querySelector("button.ytp-autonav-toggle-button") ||
-    document.querySelector("button[aria-label*='Autoplay']");
+    document.querySelector("button[aria-label*='Autoplay']") ||
+    document.querySelector("button[aria-label*='Reproducao automatica']");
   if (!toggle) return;
   const pressed = toggle.getAttribute("aria-checked");
   if (pressed === "true") toggle.click();
