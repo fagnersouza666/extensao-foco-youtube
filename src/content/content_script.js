@@ -54,6 +54,13 @@ const SHORTS_CSS = `
   ytd-shorts-shelf-renderer,
   ytd-rich-grid-shelf-renderer[is-shorts],
   ytd-rich-grid-shelf-renderer[is-shorts] *,
+  ytd-rich-shelf-renderer[is-shorts],
+  ytd-rich-shelf-renderer[is-shorts] *,
+  ytd-rich-item-renderer ytm-shorts-lockup-view-model-v2,
+  ytd-rich-item-renderer ytm-shorts-lockup-view-model,
+  a.reel-item-endpoint[href^="/shorts/"],
+  ytd-browse[page-subtype="home"] #contents > ytd-rich-section-renderer:nth-child(12),
+  #items > ytd-guide-entry-renderer:nth-child(2),
   ytd-rich-section-renderer ytd-rich-shelf-renderer[is-shorts],
   ytd-rich-section-renderer ytd-rich-shelf-renderer[is-shorts] * {
     display: none !important;
@@ -63,13 +70,17 @@ const SHORTS_CSS = `
 const HOME_CSS = `
   ytd-browse[page-subtype="home"] #contents,
   ytd-browse[page-subtype="home"] ytd-rich-grid-renderer,
-  ytd-two-column-browse-results-renderer[page-subtype="home"] #contents {
+  ytd-two-column-browse-results-renderer[page-subtype="home"] #contents,
+  ytd-rich-grid-renderer,
+  ytd-rich-grid-renderer #contents,
+  ytd-browse[page-subtype="home"] ytd-rich-grid-renderer #contents {
     display: none !important;
   }
 `;
 
 const WATCH_CSS = `
   #related,
+  #secondary,
   ytd-watch-next-secondary-results-renderer,
   ytd-secondary-results-renderer {
     display: none !important;
@@ -241,7 +252,7 @@ const focusSearch = () => {
 const disableAutoplay = () => {
   if (!config.rules.disableAutoplay) return;
   const toggle =
-    document.querySelector("button.ytp-autonav-toggle-button") ||
+    document.querySelector(".ytp-autonav-toggle-button") ||
     document.querySelector("button[aria-label*='Autoplay']") ||
     document.querySelector("button[aria-label*='Reproducao automatica']");
   if (!toggle) return;
