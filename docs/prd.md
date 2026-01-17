@@ -297,7 +297,7 @@ Estrutura conceitual:
 ### Repositório (estrutura sugerida)
 
 ```
-/extension
+
   manifest.json
   /src
     content/
