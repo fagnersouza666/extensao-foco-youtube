@@ -49,6 +49,3 @@ Sem coleta de dados, sem servidor.
 ## Roadmap
 - Preset personalizável e whitelist de canais.
 - Atalhos de teclado e regras por horário.
-
-## Contribuindo e manutenção
-- Atualize este README quando mudar estrutura, seletores ou comportamento.

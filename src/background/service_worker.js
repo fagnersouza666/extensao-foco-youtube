@@ -5,8 +5,20 @@ if (!FOCUS) {
   throw new Error("YT_FOCUS constants not loaded");
 }
 
-const { STORAGE_KEY, DEFAULT_CONFIG, MESSAGE_TYPES, SNOOZE_MINUTES_DEFAULT } =
-  FOCUS;
+const {
+  STORAGE_KEY,
+  DEFAULT_CONFIG,
+  MESSAGE_TYPES,
+  SNOOZE_MINUTES_DEFAULT,
+  MIN_SNOOZE_MINUTES,
+  MAX_SNOOZE_MINUTES
+} = FOCUS;
+
+const clampMinutes = (value) =>
+  Math.min(
+    MAX_SNOOZE_MINUTES,
+    Math.max(MIN_SNOOZE_MINUTES, Number(value))
+  );
 
 const withDefaults = (stored) => ({
   ...DEFAULT_CONFIG,
@@ -88,7 +100,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         break;
       }
       case MESSAGE_TYPES.SNOOZE: {
-        const minutes = Number(message.minutes || SNOOZE_MINUTES_DEFAULT);
+        const minutes = clampMinutes(
+          message.minutes || SNOOZE_MINUTES_DEFAULT
+        );
         const next = {
           ...config,
           snoozeUntil: Date.now() + minutes * 60 * 1000
