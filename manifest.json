@@ -1,10 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Modo Foco para YouTube",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Reduz distracoes no YouTube com modo foco e soneca.",
-  "permissions": ["storage", "alarms"],
-  "host_permissions": ["https://www.youtube.com/*"],
+  "permissions": [
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*"
+  ],
   "background": {
     "service_worker": "src/background/service_worker.js"
   },
@@ -14,8 +19,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["src/content/content_script.js"],
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "js": [
+        "src/content/content_script.js"
+      ],
       "run_at": "document_idle"
     }
   ]
