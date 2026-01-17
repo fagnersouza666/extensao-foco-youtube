@@ -1,16 +1,12 @@
-const STORAGE_KEY = "focusConfig";
+importScripts("src/shared/constants.js");
 
-const DEFAULT_CONFIG = {
-  enabled: false,
-  preset: "work",
-  snoozeUntil: null,
-  rules: {
-    hideShorts: true,
-    hideHomeFeed: true,
-    hideRelated: true,
-    disableAutoplay: true
-  }
-};
+const FOCUS = globalThis.YT_FOCUS;
+if (!FOCUS) {
+  throw new Error("YT_FOCUS constants not loaded");
+}
+
+const { STORAGE_KEY, DEFAULT_CONFIG, MESSAGE_TYPES, SNOOZE_MINUTES_DEFAULT } =
+  FOCUS;
 
 const withDefaults = (stored) => ({
   ...DEFAULT_CONFIG,
@@ -71,13 +67,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     const config = await getConfig();
 
     switch (message?.type) {
-      case "GET_CONFIG": {
+      case MESSAGE_TYPES.GET_CONFIG: {
         await normalizeConfig();
         const latest = await getConfig();
         sendResponse({ ok: true, config: latest });
         break;
       }
-      case "SET_ENABLED": {
+      case MESSAGE_TYPES.SET_ENABLED: {
         const next = { ...config, enabled: Boolean(message.enabled) };
         if (!next.enabled) next.snoozeUntil = null;
         await setConfig(next);
@@ -85,14 +81,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         sendResponse({ ok: true, config: next });
         break;
       }
-      case "SET_PRESET": {
+      case MESSAGE_TYPES.SET_PRESET: {
         const next = { ...config, preset: message.preset || "work" };
         await setConfig(next);
         sendResponse({ ok: true, config: next });
         break;
       }
-      case "SNOOZE": {
-        const minutes = Number(message.minutes || 10);
+      case MESSAGE_TYPES.SNOOZE: {
+        const minutes = Number(message.minutes || SNOOZE_MINUTES_DEFAULT);
         const next = {
           ...config,
           snoozeUntil: Date.now() + minutes * 60 * 1000
@@ -102,7 +98,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         sendResponse({ ok: true, config: next });
         break;
       }
-      case "CLEAR_SNOOZE": {
+      case MESSAGE_TYPES.CLEAR_SNOOZE: {
         const next = { ...config, snoozeUntil: null };
         await setConfig(next);
         await scheduleSnoozeAlarm(next);

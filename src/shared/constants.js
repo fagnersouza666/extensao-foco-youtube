@@ -1,0 +1,44 @@
+(() => {
+  const STORAGE_KEY = "focusConfig";
+
+  const MESSAGE_TYPES = {
+    GET_CONFIG: "GET_CONFIG",
+    SET_ENABLED: "SET_ENABLED",
+    SET_PRESET: "SET_PRESET",
+    SNOOZE: "SNOOZE",
+    CLEAR_SNOOZE: "CLEAR_SNOOZE"
+  };
+
+  const DEFAULT_CONFIG = {
+    enabled: false,
+    preset: "work",
+    snoozeUntil: null,
+    rules: {
+      hideShorts: true,
+      hideHomeFeed: true,
+      hideRelated: true,
+      disableAutoplay: true
+    }
+  };
+
+  const PRESET_LABELS = {
+    work: "Trabalho/Estudo",
+    moderate: "Moderado",
+    leisure: "Lazer",
+    custom: "Custom"
+  };
+
+  const SNOOZE_MINUTES_DEFAULT = 10;
+  const OVERLAY_SUPPRESS_MS = 10000;
+  const ROUTE_CHECK_INTERVAL_MS = 1000;
+
+  globalThis.YT_FOCUS = {
+    STORAGE_KEY,
+    MESSAGE_TYPES,
+    DEFAULT_CONFIG,
+    PRESET_LABELS,
+    SNOOZE_MINUTES_DEFAULT,
+    OVERLAY_SUPPRESS_MS,
+    ROUTE_CHECK_INTERVAL_MS
+  };
+})();

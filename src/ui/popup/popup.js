@@ -1,3 +1,10 @@
+const FOCUS = globalThis.YT_FOCUS;
+if (!FOCUS) {
+  throw new Error("YT_FOCUS constants not loaded");
+}
+
+const { STORAGE_KEY, MESSAGE_TYPES, SNOOZE_MINUTES_DEFAULT } = FOCUS;
+
 const sendMessage = (payload) =>
   new Promise((resolve) => chrome.runtime.sendMessage(payload, resolve));
 
@@ -26,28 +33,34 @@ const updateUI = (config) => {
 };
 
 const refresh = async () => {
-  const response = await sendMessage({ type: "GET_CONFIG" });
+  const response = await sendMessage({ type: MESSAGE_TYPES.GET_CONFIG });
   if (response?.ok) updateUI(response.config);
 };
 
 toggle.addEventListener("change", async () => {
-  await sendMessage({ type: "SET_ENABLED", enabled: toggle.checked });
+  await sendMessage({
+    type: MESSAGE_TYPES.SET_ENABLED,
+    enabled: toggle.checked
+  });
   await refresh();
 });
 
 preset.addEventListener("change", async () => {
-  await sendMessage({ type: "SET_PRESET", preset: preset.value });
+  await sendMessage({ type: MESSAGE_TYPES.SET_PRESET, preset: preset.value });
   await refresh();
 });
 
 snoozeBtn.addEventListener("click", async () => {
-  await sendMessage({ type: "SNOOZE", minutes: 10 });
+  await sendMessage({
+    type: MESSAGE_TYPES.SNOOZE,
+    minutes: SNOOZE_MINUTES_DEFAULT
+  });
   await refresh();
 });
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
-  if (changes.focusConfig) refresh();
+  if (changes[STORAGE_KEY]) refresh();
 });
 
 refresh();

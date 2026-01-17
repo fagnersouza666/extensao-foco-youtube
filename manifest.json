@@ -23,6 +23,7 @@
         "https://www.youtube.com/*"
       ],
       "js": [
+        "src/shared/constants.js",
         "src/content/content_script.js"
       ],
       "run_at": "document_idle"

@@ -17,6 +17,7 @@ Sem coleta de dados, sem servidor.
 - manifest.json
 - src/background/service_worker.js
 - src/content/content_script.js
+- src/shared/constants.js
 - src/ui/popup/popup.html
 - src/ui/popup/popup.js
 - src/ui/popup/popup.css
@@ -37,9 +38,6 @@ Sem coleta de dados, sem servidor.
 - O overlay é suprimido ao clicar no campo de busca (por alguns segundos ou enquanto estiver focado).
 - Autoplay é desativado via seletor `.ytp-autonav-toggle-button`.
 - Snooze salva `snoozeUntil` em `chrome.storage.local` e reativa via alarm.
-
-## Testes manuais
-- Use a matriz em `docs/matriz-testes-manuais.md`.
 
 ## Privacidade e permissões
 - Nenhum dado sai do navegador.

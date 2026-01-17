@@ -1,23 +1,17 @@
-const STORAGE_KEY = "focusConfig";
+const FOCUS = globalThis.YT_FOCUS;
+if (!FOCUS) {
+  throw new Error("YT_FOCUS constants not loaded");
+}
 
-const DEFAULT_CONFIG = {
-  enabled: false,
-  preset: "work",
-  snoozeUntil: null,
-  rules: {
-    hideShorts: true,
-    hideHomeFeed: true,
-    hideRelated: true,
-    disableAutoplay: true
-  }
-};
-
-const PRESET_LABELS = {
-  work: "Trabalho/Estudo",
-  moderate: "Moderado",
-  leisure: "Lazer",
-  custom: "Custom"
-};
+const {
+  STORAGE_KEY,
+  DEFAULT_CONFIG,
+  PRESET_LABELS,
+  MESSAGE_TYPES,
+  SNOOZE_MINUTES_DEFAULT,
+  OVERLAY_SUPPRESS_MS,
+  ROUTE_CHECK_INTERVAL_MS
+} = FOCUS;
 
 let config = { ...DEFAULT_CONFIG };
 let lastUrl = location.href;
@@ -47,7 +41,9 @@ const isFocusActive = () => Boolean(config.enabled && !isSnoozed());
 const isSearchFocused = () => {
   const active = document.activeElement;
   if (!active || !active.matches) return false;
-  return active.matches("input#search, input.ytd-searchbox");
+  return active.matches(
+    "input#search, input.ytd-searchbox, input[name='search_query']"
+  );
 };
 
 const isOverlaySuppressed = () =>
@@ -220,13 +216,18 @@ const createOverlay = () => {
     const action = event.target?.getAttribute?.("data-action");
     if (!action) return;
     if (action === "search") {
-      overlaySuppressedUntil = Date.now() + 10000;
+      overlaySuppressedUntil = Date.now() + OVERLAY_SUPPRESS_MS;
       removeOverlay();
       setTimeout(focusSearch, 0);
     }
     if (action === "subs") location.href = "/feed/subscriptions";
     if (action === "history") location.href = "/feed/history";
-    if (action === "snooze") sendMessage({ type: "SNOOZE", minutes: 10 });
+    if (action === "snooze") {
+      sendMessage({
+        type: MESSAGE_TYPES.SNOOZE,
+        minutes: SNOOZE_MINUTES_DEFAULT
+      });
+    }
   });
 
   return el;
@@ -253,7 +254,8 @@ const removeOverlay = () => {
 const focusSearch = () => {
   const input =
     document.querySelector("input#search") ||
-    document.querySelector("input.ytd-searchbox");
+    document.querySelector("input.ytd-searchbox") ||
+    document.querySelector("input[name='search_query']");
   if (input) {
     input.focus();
     input.select?.();
@@ -267,8 +269,13 @@ const disableAutoplay = () => {
     document.querySelector("button[aria-label*='Autoplay']") ||
     document.querySelector("button[aria-label*='Reproducao automatica']");
   if (!toggle) return;
-  const pressed = toggle.getAttribute("aria-checked");
-  if (pressed === "true") toggle.click();
+  const isOn = () => {
+    const checked = toggle.getAttribute("aria-checked");
+    if (checked === "true") return true;
+    const pressed = toggle.getAttribute("aria-pressed");
+    return pressed === "true";
+  };
+  if (isOn()) toggle.click();
 };
 
 const redirectShorts = () => {
@@ -321,6 +328,26 @@ const handleUrlChange = () => {
   applyFocus();
 };
 
+const installNavigationListeners = () => {
+  window.addEventListener("popstate", handleUrlChange);
+  window.addEventListener("yt-navigate-finish", handleUrlChange);
+  window.addEventListener("yt-page-data-updated", handleUrlChange);
+
+  if (!history.__ytFocusPatched) {
+    history.__ytFocusPatched = true;
+    const wrap = (fn) =>
+      function (...args) {
+        const result = fn.apply(this, args);
+        handleUrlChange();
+        return result;
+      };
+    history.pushState = wrap(history.pushState);
+    history.replaceState = wrap(history.replaceState);
+  }
+
+  setInterval(handleUrlChange, ROUTE_CHECK_INTERVAL_MS);
+};
+
 const startObserver = () => {
   if (observer) return;
   observer = new MutationObserver(() => scheduleApply());
@@ -334,7 +361,7 @@ const stopObserver = () => {
 };
 
 const loadConfig = async () => {
-  const response = await sendMessage({ type: "GET_CONFIG" });
+  const response = await sendMessage({ type: MESSAGE_TYPES.GET_CONFIG });
   if (response?.ok) config = withDefaults(response.config);
 };
 
@@ -349,8 +376,7 @@ const init = async () => {
   await loadConfig();
   if (isFocusActive()) startObserver();
 
-  window.addEventListener("popstate", handleUrlChange);
-  setInterval(handleUrlChange, 500);
+  installNavigationListeners();
   document.addEventListener("focusin", scheduleApply, true);
   document.addEventListener("focusout", scheduleApply, true);
 
