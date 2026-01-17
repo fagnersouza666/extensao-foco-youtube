@@ -25,6 +25,7 @@ let applyTimer = null;
 let styleEl = null;
 let overlayEl = null;
 let observer = null;
+let overlaySuppressedUntil = 0;
 
 const withDefaults = (stored) => ({
   ...DEFAULT_CONFIG,
@@ -42,6 +43,15 @@ const isSnoozed = () =>
   Boolean(config.snoozeUntil && Date.now() < config.snoozeUntil);
 
 const isFocusActive = () => Boolean(config.enabled && !isSnoozed());
+
+const isSearchFocused = () => {
+  const active = document.activeElement;
+  if (!active || !active.matches) return false;
+  return active.matches("input#search, input.ytd-searchbox");
+};
+
+const isOverlaySuppressed = () =>
+  Date.now() < overlaySuppressedUntil || isSearchFocused();
 
 const SHORTS_CSS = `
   ytd-guide-entry-renderer a[href^="/shorts"],
@@ -210,6 +220,7 @@ const createOverlay = () => {
     const action = event.target?.getAttribute?.("data-action");
     if (!action) return;
     if (action === "search") {
+      overlaySuppressedUntil = Date.now() + 10000;
       removeOverlay();
       setTimeout(focusSearch, 0);
     }
@@ -285,8 +296,12 @@ const applyFocus = () => {
 
   ensureStyle(buildCss(route));
 
-  if (route === "home") ensureOverlay();
-  else removeOverlay();
+  if (route === "home") {
+    if (isOverlaySuppressed()) removeOverlay();
+    else ensureOverlay();
+  } else {
+    removeOverlay();
+  }
 
   if (route === "watch") disableAutoplay();
 };
@@ -336,6 +351,8 @@ const init = async () => {
 
   window.addEventListener("popstate", handleUrlChange);
   setInterval(handleUrlChange, 500);
+  document.addEventListener("focusin", scheduleApply, true);
+  document.addEventListener("focusout", scheduleApply, true);
 
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "local") return;
