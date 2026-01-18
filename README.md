@@ -55,7 +55,7 @@ Para habilitar logs no console, defina `debug: true` no objeto `focusConfig` em 
 - O DOM do YouTube muda com frequência; seletores podem precisar de ajustes.
 - Autoplay é desativado por seletor e pode falhar em mudanças futuras.
 
-## Roadmap (alinhado ao PRD)
+## Roadmap
 - Refinos dos presets e melhorias da configuração personalizada.
 - Agenda por horário/dia.
 - Whitelist de canais.
