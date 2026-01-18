@@ -17,7 +17,7 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
 
 * Entregar um **Modo Foco confiável** (não “anti-Shorts frágil”) para rotas principais: Home, Watch, Shorts.
 * Permitir **ligar/desligar** e **sonecar por 10 minutos** sem precisar recarregar a página.
-* Presets **Trabalho/Estudo, Moderado, Lazer e Custom** prontos e eficazes.
+* Presets **Trabalho/Estudo, Moderado, Lazer e Personalizado** prontos e eficazes.
 
 ### Métricas de sucesso (indicativas, sem tracking obrigatório)
 
@@ -56,7 +56,7 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
   * Remover **Recomendados/Related** na página de vídeo.
   * **Desativar Autoplay**.
 * **Presets “Moderado” e “Lazer”** (menos rígidos).
-* **Preset “Custom”** com regras editáveis no popup.
+* **Preset “Personalizado”** com regras editáveis no popup.
 * **Panic button / Soneca 10 min**:
 
   * Desliga o Modo Foco por 10 minutos e **religa automaticamente**.
@@ -71,7 +71,7 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
 
 ### O que está IN (v1.0 — maturidade)
 
-* **Export/import** da configuração custom.
+* **Export/import** da configuração personalizada.
 
 ### Fora de escopo (para evitar “bomba”)
 
@@ -113,7 +113,7 @@ Regras:
 
 * Próximo do padrão, com opção de remover Shorts.
 
-### Preset: Custom (implementado)
+### Preset: Personalizado (implementado)
 
 * Mesmas regras base, com ajuste manual no popup (Shorts, Home, Related, autoplay).
 
@@ -128,7 +128,7 @@ Regras:
 1. **Popup**
 
    * Toggle ON/OFF
-   * Selector de preset (Work/Moderate/Lazer/Custom)
+   * Selector de preset (Work/Moderate/Lazer/Personalizado)
    * Botão **Sonecar 10 min**
    * Status (ex.: “Ligado — Trabalho/Estudo”, “Soneca até 14:32”)
 
@@ -275,7 +275,7 @@ Isso habilita:
 
 * Toggle imediato
 * Soneca
-* Evolução para custom rules
+* Evolução para regras personalizadas
 
 ---
 
@@ -284,8 +284,8 @@ Isso habilita:
 Estrutura conceitual:
 
 * `enabled: boolean`
-* `preset: "work" | "moderate" | "leisure" | "custom"`
-* `rules: { hideShorts, hideHomeFeed, hideRelated, disableAutoplay, ... }` (especialmente para custom)
+* `preset: "work" | "moderate" | "leisure" | "custom"` (custom = personalizado)
+* `rules: { hideShorts, hideHomeFeed, hideRelated, disableAutoplay, ... }` (especialmente para o preset personalizado)
 * `schedule: [{ days:[1..5], start:"09:00", end:"18:00", preset:"work" }]` (v0.2)
 * `whitelistChannels: [channelId...]` (v0.3)
 * `snoozeUntil: timestamp | null`
@@ -388,7 +388,7 @@ README.md
 * **v0.1**: Toggle + preset Trabalho/Estudo + Home bloqueada + related removido + autoplay off + shorts bloqueado + soneca 10 min
 * **v0.2**: Agenda
 * **v0.3**: Whitelist por canal
-* **v1.0**: Custom + export/import + refinamentos de UI/estabilidade
+* **v1.0**: Personalizado + export/import + refinamentos de UI/estabilidade
 
 ---
 

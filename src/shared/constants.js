@@ -28,7 +28,7 @@
     work: "Trabalho/Estudo",
     moderate: "Moderado",
     leisure: "Lazer",
-    custom: "Custom"
+    custom: "Personalizado"
   };
 
   const PRESET_RULES = {
