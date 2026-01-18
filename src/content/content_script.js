@@ -10,7 +10,8 @@ const {
   MESSAGE_TYPES,
   SNOOZE_MINUTES_DEFAULT,
   OVERLAY_SUPPRESS_MS,
-  ROUTE_CHECK_INTERVAL_MS
+  ROUTE_CHECK_INTERVAL_MS,
+  LOG_PREFIX
 } = FOCUS;
 
 let config = { ...DEFAULT_CONFIG };
@@ -20,6 +21,10 @@ let styleEl = null;
 let overlayEl = null;
 let observer = null;
 let overlaySuppressedUntil = 0;
+
+const debugLog = (...args) => {
+  if (config.debug) console.debug(LOG_PREFIX, ...args);
+};
 
 const withDefaults = (stored) => ({
   ...DEFAULT_CONFIG,
@@ -324,7 +329,9 @@ const scheduleApply = () => {
 
 const handleUrlChange = () => {
   if (location.href === lastUrl) return;
+  const previous = lastUrl;
   lastUrl = location.href;
+  debugLog("Rota mudou", { from: previous, to: lastUrl, route: getRoute() });
   applyFocus();
 };
 
@@ -362,13 +369,21 @@ const stopObserver = () => {
 
 const loadConfig = async () => {
   const response = await sendMessage({ type: MESSAGE_TYPES.GET_CONFIG });
-  if (response?.ok) config = withDefaults(response.config);
+  if (response?.ok) {
+    config = withDefaults(response.config);
+    debugLog("Config carregada");
+  }
 };
 
 const onConfigChange = async () => {
   await loadConfig();
   if (isFocusActive()) startObserver();
   else stopObserver();
+  debugLog("Config aplicada", {
+    enabled: config.enabled,
+    snoozed: isSnoozed(),
+    preset: config.preset
+  });
   applyFocus();
 };
 

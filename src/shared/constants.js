@@ -6,12 +6,14 @@
     SET_ENABLED: "SET_ENABLED",
     SET_PRESET: "SET_PRESET",
     SNOOZE: "SNOOZE",
-    CLEAR_SNOOZE: "CLEAR_SNOOZE"
+    CLEAR_SNOOZE: "CLEAR_SNOOZE",
+    SET_DEBUG: "SET_DEBUG"
   };
 
   const DEFAULT_CONFIG = {
     enabled: false,
     preset: "work",
+    debug: false,
     snoozeUntil: null,
     rules: {
       hideShorts: true,
@@ -33,6 +35,7 @@
   const MAX_SNOOZE_MINUTES = 120;
   const OVERLAY_SUPPRESS_MS = 10000;
   const ROUTE_CHECK_INTERVAL_MS = 1000;
+  const LOG_PREFIX = "[YTFocus]";
 
   globalThis.YT_FOCUS = {
     STORAGE_KEY,
@@ -43,6 +46,7 @@
     MIN_SNOOZE_MINUTES,
     MAX_SNOOZE_MINUTES,
     OVERLAY_SUPPRESS_MS,
-    ROUTE_CHECK_INTERVAL_MS
+    ROUTE_CHECK_INTERVAL_MS,
+    LOG_PREFIX
   };
 })();

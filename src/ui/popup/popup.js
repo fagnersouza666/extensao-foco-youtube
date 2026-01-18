@@ -3,7 +3,7 @@ if (!FOCUS) {
   throw new Error("YT_FOCUS constants not loaded");
 }
 
-const { STORAGE_KEY, MESSAGE_TYPES, SNOOZE_MINUTES_DEFAULT } = FOCUS;
+const { STORAGE_KEY, MESSAGE_TYPES, SNOOZE_MINUTES_DEFAULT, LOG_PREFIX } = FOCUS;
 
 const sendMessage = (payload) =>
   new Promise((resolve) => chrome.runtime.sendMessage(payload, resolve));
@@ -14,6 +14,12 @@ const preset = document.getElementById("preset");
 const snoozeBtn = document.getElementById("snooze");
 const snoozeStatus = document.getElementById("snoozeStatus");
 
+let currentConfig = null;
+
+const debugLog = (...args) => {
+  if (currentConfig?.debug) console.debug(LOG_PREFIX, ...args);
+};
+
 const formatTime = (ts) =>
   new Date(ts).toLocaleTimeString([], {
     hour: "2-digit",
@@ -21,6 +27,7 @@ const formatTime = (ts) =>
   });
 
 const updateUI = (config) => {
+  currentConfig = config;
   toggle.checked = Boolean(config.enabled);
   statusEl.textContent = config.enabled ? "Ligado" : "Desligado";
   preset.value = config.preset || "work";
@@ -34,7 +41,10 @@ const updateUI = (config) => {
 
 const refresh = async () => {
   const response = await sendMessage({ type: MESSAGE_TYPES.GET_CONFIG });
-  if (response?.ok) updateUI(response.config);
+  if (response?.ok) {
+    updateUI(response.config);
+    debugLog("Popup atualizado");
+  }
 };
 
 toggle.addEventListener("change", async () => {

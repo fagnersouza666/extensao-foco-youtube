@@ -11,7 +11,8 @@ const {
   MESSAGE_TYPES,
   SNOOZE_MINUTES_DEFAULT,
   MIN_SNOOZE_MINUTES,
-  MAX_SNOOZE_MINUTES
+  MAX_SNOOZE_MINUTES,
+  LOG_PREFIX
 } = FOCUS;
 
 const clampMinutes = (value) =>
@@ -19,6 +20,10 @@ const clampMinutes = (value) =>
     MAX_SNOOZE_MINUTES,
     Math.max(MIN_SNOOZE_MINUTES, Number(value))
   );
+
+const debugLog = (config, ...args) => {
+  if (config?.debug) console.debug(LOG_PREFIX, ...args);
+};
 
 const withDefaults = (stored) => ({
   ...DEFAULT_CONFIG,
@@ -90,12 +95,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         if (!next.enabled) next.snoozeUntil = null;
         await setConfig(next);
         await scheduleSnoozeAlarm(next);
+        debugLog(next, "SET_ENABLED", next.enabled);
         sendResponse({ ok: true, config: next });
         break;
       }
       case MESSAGE_TYPES.SET_PRESET: {
         const next = { ...config, preset: message.preset || "work" };
         await setConfig(next);
+        debugLog(next, "SET_PRESET", next.preset);
         sendResponse({ ok: true, config: next });
         break;
       }
@@ -109,6 +116,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         };
         await setConfig(next);
         await scheduleSnoozeAlarm(next);
+        debugLog(next, "SNOOZE", minutes);
         sendResponse({ ok: true, config: next });
         break;
       }
@@ -116,6 +124,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         const next = { ...config, snoozeUntil: null };
         await setConfig(next);
         await scheduleSnoozeAlarm(next);
+        debugLog(next, "CLEAR_SNOOZE");
+        sendResponse({ ok: true, config: next });
+        break;
+      }
+      case MESSAGE_TYPES.SET_DEBUG: {
+        const next = { ...config, debug: Boolean(message.debug) };
+        await setConfig(next);
+        debugLog(next, "SET_DEBUG", next.debug);
         sendResponse({ ok: true, config: next });
         break;
       }

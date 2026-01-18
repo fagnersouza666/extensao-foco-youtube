@@ -38,6 +38,7 @@ Sem coleta de dados, sem servidor.
 - O overlay é suprimido ao clicar no campo de busca (por alguns segundos ou enquanto estiver focado).
 - Autoplay é desativado via seletor `.ytp-autonav-toggle-button`.
 - Snooze salva `snoozeUntil` em `chrome.storage.local` e reativa via alarm.
+- Diagnóstico: defina `debug: true` em `focusConfig` para habilitar logs no console.
 
 ## Privacidade e permissões
 - Nenhum dado sai do navegador.
