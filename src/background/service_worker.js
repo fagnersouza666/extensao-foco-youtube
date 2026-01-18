@@ -9,11 +9,29 @@ const {
   STORAGE_KEY,
   DEFAULT_CONFIG,
   MESSAGE_TYPES,
+  PRESET_RULES,
   SNOOZE_MINUTES_DEFAULT,
   MIN_SNOOZE_MINUTES,
   MAX_SNOOZE_MINUTES,
   LOG_PREFIX
 } = FOCUS;
+
+const resolvePreset = (value) => {
+  if (Object.prototype.hasOwnProperty.call(PRESET_RULES, value)) return value;
+  return "work";
+};
+
+const applyPresetRules = (config, preset) => {
+  const rules = PRESET_RULES[preset];
+  if (!rules) return config;
+  return {
+    ...config,
+    rules: {
+      ...config.rules,
+      ...rules
+    }
+  };
+};
 
 const clampMinutes = (value) =>
   Math.min(
@@ -100,9 +118,23 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         break;
       }
       case MESSAGE_TYPES.SET_PRESET: {
-        const next = { ...config, preset: message.preset || "work" };
+        const preset = resolvePreset(message.preset);
+        const next = applyPresetRules({ ...config, preset }, preset);
         await setConfig(next);
         debugLog(next, "SET_PRESET", next.preset);
+        sendResponse({ ok: true, config: next });
+        break;
+      }
+      case MESSAGE_TYPES.SET_RULES: {
+        const next = {
+          ...config,
+          rules: {
+            ...config.rules,
+            ...(message.rules || {})
+          }
+        };
+        await setConfig(next);
+        debugLog(next, "SET_RULES", next.rules);
         sendResponse({ ok: true, config: next });
         break;
       }

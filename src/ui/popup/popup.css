@@ -33,6 +33,30 @@ h1 {
   font-size: 12px;
 }
 
+.rules {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #181818;
+  border: 1px solid #2a2a2a;
+}
+
+.rules.is-hidden {
+  display: none;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox input {
+  margin: 0;
+}
+
 select {
   padding: 6px 8px;
   border-radius: 6px;

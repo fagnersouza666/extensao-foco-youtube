@@ -5,7 +5,7 @@ Não coleta dados e não usa servidor.
 
 ## O que faz hoje
 - Toggle de Modo Foco no popup.
-- Preset único: Trabalho/Estudo.
+- Presets: Trabalho/Estudo, Moderado, Lazer e Custom.
 - Oculta Shorts (menu, shelves e cards detectados).
 - Oculta o feed da Home e mostra um overlay com ações intencionais.
 - Oculta recomendados na página de vídeo (Watch).
@@ -22,7 +22,8 @@ Não coleta dados e não usa servidor.
 
 ## Como usar
 - Ligue o Modo Foco no popup.
-- Use o preset Trabalho/Estudo (único disponível).
+- Escolha um preset (Trabalho/Estudo, Moderado, Lazer ou Custom).
+- No preset Custom, você pode ajustar as regras (Shorts, Home, Related, autoplay).
 - Se precisar pausar, clique em "Sonecar 10 min" no popup ou no overlay da Home.
 
 ## Estrutura do projeto
@@ -55,6 +56,6 @@ Para habilitar logs no console, defina `debug: true` no objeto `focusConfig` em 
 - Autoplay é desativado por seletor e pode falhar em mudanças futuras.
 
 ## Roadmap (alinhado ao PRD)
-- Presets adicionais (Moderado, Lazer) e configuração custom.
+- Refinos dos presets e melhorias da configuração custom.
 - Agenda por horário/dia.
 - Whitelist de canais.

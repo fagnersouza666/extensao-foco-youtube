@@ -17,7 +17,7 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
 
 * Entregar um **Modo Foco confiável** (não “anti-Shorts frágil”) para rotas principais: Home, Watch, Shorts.
 * Permitir **ligar/desligar** e **sonecar por 10 minutos** sem precisar recarregar a página.
-* Preset “**Trabalho/Estudo**” pronto e eficaz.
+* Presets **Trabalho/Estudo, Moderado, Lazer e Custom** prontos e eficazes.
 
 ### Métricas de sucesso (indicativas, sem tracking obrigatório)
 
@@ -55,6 +55,8 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
   * Remover/neutralizar **Home feed** (feed infinito).
   * Remover **Recomendados/Related** na página de vídeo.
   * **Desativar Autoplay**.
+* **Presets “Moderado” e “Lazer”** (menos rígidos).
+* **Preset “Custom”** com regras editáveis no popup.
 * **Panic button / Soneca 10 min**:
 
   * Desliga o Modo Foco por 10 minutos e **religa automaticamente**.
@@ -69,7 +71,7 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
 
 ### O que está IN (v1.0 — maturidade)
 
-* Preset **Custom** (regras granulares) + **export/import** de configuração.
+* **Export/import** da configuração custom.
 
 ### Fora de escopo (para evitar “bomba”)
 
@@ -103,13 +105,17 @@ Regras:
 
   * Bloquear e redirecionar (Home bloqueada ou tentar conversão para watch)
 
-### Preset: Moderado (planejado)
+### Preset: Moderado (implementado)
 
 * Remove Shorts e recomendações agressivas, mantém Inscrições, e não bloqueia Home (ou “home mais limpo”).
 
-### Preset: Lazer (planejado)
+### Preset: Lazer (implementado)
 
 * Próximo do padrão, com opção de remover Shorts.
+
+### Preset: Custom (implementado)
+
+* Mesmas regras base, com ajuste manual no popup (Shorts, Home, Related, autoplay).
 
 > Decisão de “rigidez” (Hard vs Soft): o PRD suporta ambos como presets. Para posicionamento “Modo Foco”, recomenda-se **Hard Focus como padrão** (menor ambiguidade, maior entrega de valor). Soft Focus pode ser alternativa.
 
@@ -122,7 +128,7 @@ Regras:
 1. **Popup**
 
    * Toggle ON/OFF
-   * Selector de preset (Work/Moderate/Lazer/Custom quando existir)
+   * Selector de preset (Work/Moderate/Lazer/Custom)
    * Botão **Sonecar 10 min**
    * Status (ex.: “Ligado — Trabalho/Estudo”, “Soneca até 14:32”)
 
@@ -402,4 +408,3 @@ README.md
   * desativa por 10 minutos e religa automaticamente, sem comportamento inconsistente.
 * Sem permissões extras além de `storage` e `youtube.com/*`.
 * Sem qualquer coleta de dados.
-
