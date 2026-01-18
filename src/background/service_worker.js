@@ -1,4 +1,4 @@
-importScripts("src/shared/constants.js");
+importScripts("../shared/constants.js");
 
 const FOCUS = globalThis.YT_FOCUS;
 if (!FOCUS) {
