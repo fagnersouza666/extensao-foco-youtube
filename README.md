@@ -65,3 +65,8 @@ Para habilitar logs no console, defina `debug: true` no objeto `focusConfig` em 
 - Refinos dos perfis e melhorias da configuração personalizada.
 - Agenda por horário/dia.
 - Whitelist de canais.
+
+## Contato
+- Nome: Fagner Sá de Souza
+- Email: fagnersouza@gmail.com
+- Twitter/X: @Fagner_Souza
