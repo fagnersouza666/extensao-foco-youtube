@@ -1,4 +1,4 @@
-# PRD — Extensão “Modo Foco” para YouTube (MV3, open-source, 100% grátis)
+# PRD — Extensão “YouTube Foco” (MV3, open-source, 100% grátis)
 
 ## 1) Visão do produto
 

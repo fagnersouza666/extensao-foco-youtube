@@ -1,4 +1,4 @@
-# Modo Foco para YouTube (MV3)
+# YouTube Foco (MV3)
 
 Extensão de navegador que reduz distrações no YouTube com modo foco e soneca.
 Não coleta dados e não usa servidor.
@@ -25,6 +25,12 @@ Não coleta dados e não usa servidor.
 - Escolha um perfil (Trabalho/Estudo, Moderado, Lazer ou Personalizado).
 - No perfil Personalizado, você pode ajustar as regras (Shorts, Home, Related, autoplay).
 - Se precisar pausar, clique em "Sonecar 10 min" no popup ou no overlay da Home.
+
+## Diferenças entre perfis
+- **Trabalho/Estudo**: oculta Shorts, oculta o feed da Home, oculta recomendados (Related) e desativa autoplay.
+- **Moderado**: oculta Shorts, mantém o feed da Home, oculta recomendados e desativa autoplay.
+- **Lazer**: oculta Shorts, mantém o feed da Home, mantém recomendados e não desativa autoplay.
+- **Personalizado**: aplica as regras que você marcar no popup (Shorts, Home, Related, autoplay).
 
 ## Estrutura do projeto
 - `manifest.json`
