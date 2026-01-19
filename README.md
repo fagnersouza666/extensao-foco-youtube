@@ -1,4 +1,4 @@
-# YouTube Foco (MV3)
+# YouTube Foco
 
 Extensão de navegador que reduz distrações no YouTube com modo foco e soneca.
 Não coleta dados e não usa servidor.
