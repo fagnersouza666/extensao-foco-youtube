@@ -2,7 +2,7 @@
 
 ## 1) Visão do produto
 
-**Uma extensão de navegador Chrome que transforma o YouTube em ferramenta**, reduzindo gatilhos de distração (Shorts, feed infinito, recomendações agressivas) por meio de **presets de foco**, **toggle rápido**, e um **botão de pânico (soneca de 10 min)**.
+**Uma extensão de navegador Chrome que transforma o YouTube em ferramenta**, reduzindo gatilhos de distração (Shorts, feed infinito, recomendações agressivas) por meio de **perfis de foco**, **toggle rápido**, e um **botão de pânico (soneca de 10 min)**.
 Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationObserver + detecção de rota**.
 
 **Proposta de valor (1 frase):**
@@ -17,7 +17,7 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
 
 * Entregar um **Modo Foco confiável** (não “anti-Shorts frágil”) para rotas principais: Home, Watch, Shorts.
 * Permitir **ligar/desligar** e **sonecar por 10 minutos** sem precisar recarregar a página.
-* Presets **Trabalho/Estudo, Moderado, Lazer e Personalizado** prontos e eficazes.
+* Perfis **Trabalho/Estudo, Moderado, Lazer e Personalizado** prontos e eficazes.
 
 ### Métricas de sucesso (indicativas, sem tracking obrigatório)
 
@@ -49,14 +49,14 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
 ### O que está IN (v0.1 — lançável)
 
 * **Toggle Modo Foco ON/OFF** (no popup).
-* **Preset “Trabalho/Estudo”**:
+* **Perfil “Trabalho/Estudo”**:
 
   * Remover **Shorts** (menu, prateleiras/shelves, busca, canais).
   * Remover/neutralizar **Home feed** (feed infinito).
   * Remover **Recomendados/Related** na página de vídeo.
   * **Desativar Autoplay**.
-* **Presets “Moderado” e “Lazer”** (menos rígidos).
-* **Preset “Personalizado”** com regras editáveis no popup.
+* **Perfis “Moderado” e “Lazer”** (menos rígidos).
+* **Perfil “Personalizado”** com regras editáveis no popup.
 * **Panic button / Soneca 10 min**:
 
   * Desliga o Modo Foco por 10 minutos e **religa automaticamente**.
@@ -66,7 +66,7 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
 
 ### O que está IN (v0.2 — diferencial forte)
 
-* **Agenda** (ex.: seg–sex 9h–18h) para ligar/desligar automaticamente ou aplicar preset específico.
+* **Agenda** (ex.: seg–sex 9h–18h) para ligar/desligar automaticamente ou aplicar perfil específico.
 * **Whitelist por canal** (permitir recomendações/Shorts apenas de canais escolhidos).
 
 ### O que está IN (v1.0 — maturidade)
@@ -82,9 +82,9 @@ Funciona de forma robusta em um site **SPA** (YouTube) usando **CSS + MutationOb
 
 ---
 
-## 5) Presets (definição)
+## 5) Perfis (definição)
 
-### Preset: Trabalho/Estudo (v0.1)
+### Perfil: Trabalho/Estudo (v0.1)
 
 **Filosofia:** permitir apenas ações intencionais: buscar, abrir inscrições, assistir um vídeo escolhido.
 
@@ -105,19 +105,19 @@ Regras:
 
   * Bloquear e redirecionar (Home bloqueada ou tentar conversão para watch)
 
-### Preset: Moderado (implementado)
+### Perfil: Moderado (implementado)
 
 * Remove Shorts e recomendações agressivas, mantém Inscrições, e não bloqueia Home (ou “home mais limpo”).
 
-### Preset: Lazer (implementado)
+### Perfil: Lazer (implementado)
 
 * Próximo do padrão, com opção de remover Shorts.
 
-### Preset: Personalizado (implementado)
+### Perfil: Personalizado (implementado)
 
 * Mesmas regras base, com ajuste manual no popup (Shorts, Home, Related, autoplay).
 
-> Decisão de “rigidez” (Hard vs Soft): o PRD suporta ambos como presets. Para posicionamento “Modo Foco”, recomenda-se **Hard Focus como padrão** (menor ambiguidade, maior entrega de valor). Soft Focus pode ser alternativa.
+> Decisão de “rigidez” (Hard vs Soft): o PRD suporta ambos como perfis. Para posicionamento “Modo Foco”, recomenda-se **Hard Focus como padrão** (menor ambiguidade, maior entrega de valor). Soft Focus pode ser alternativa.
 
 ---
 
@@ -128,7 +128,7 @@ Regras:
 1. **Popup**
 
    * Toggle ON/OFF
-   * Selector de preset (Work/Moderate/Lazer/Personalizado)
+   * Selector de perfil (Work/Moderate/Lazer/Personalizado)
    * Botão **Sonecar 10 min**
    * Status (ex.: “Ligado — Trabalho/Estudo”, “Soneca até 14:32”)
 
@@ -179,10 +179,10 @@ Regras:
 * Usuário consegue ligar/desligar o Modo Foco.
 * Deve refletir imediatamente na UI e na página (sem reload sempre que possível).
 
-### RF-02 — Presets
+### RF-02 — Perfis
 
-* Sistema de presets com conjunto fixo de regras por preset.
-* Preset ativo persistido em `storage`.
+* Sistema de perfis com conjunto fixo de regras por perfil.
+* Perfil ativo persistido em `storage`.
 
 ### RF-03 — Bloqueio/Intercepção de rotas (SPA)
 
@@ -250,7 +250,7 @@ Regras:
 * **Service worker (background)**:
 
   * Persistência de config
-  * Comandos do popup (toggle/preset/soneca)
+  * Comandos do popup (toggle/perfil/soneca)
   * (v0.2) agenda: decide estado e notifica content scripts
 * **Popup UI**
 * **Options page** (v0.2+)
@@ -284,9 +284,9 @@ Isso habilita:
 Estrutura conceitual:
 
 * `enabled: boolean`
-* `preset: "work" | "moderate" | "leisure" | "custom"` (custom = personalizado)
-* `rules: { hideShorts, hideHomeFeed, hideRelated, disableAutoplay, ... }` (especialmente para o preset personalizado)
-* `schedule: [{ days:[1..5], start:"09:00", end:"18:00", preset:"work" }]` (v0.2)
+* `perfil: "work" | "moderate" | "leisure" | "custom"` (custom = personalizado)
+* `rules: { hideShorts, hideHomeFeed, hideRelated, disableAutoplay, ... }` (especialmente para o perfil personalizado)
+* `schedule: [{ days:[1..5], start:"09:00", end:"18:00", perfil:"work" }]` (v0.2)
 * `whitelistChannels: [channelId...]` (v0.3)
 * `snoozeUntil: timestamp | null`
 
@@ -385,7 +385,7 @@ README.md
 
 ## 14) Plano de releases
 
-* **v0.1**: Toggle + preset Trabalho/Estudo + Home bloqueada + related removido + autoplay off + shorts bloqueado + soneca 10 min
+* **v0.1**: Toggle + perfil Trabalho/Estudo + Home bloqueada + related removido + autoplay off + shorts bloqueado + soneca 10 min
 * **v0.2**: Agenda
 * **v0.3**: Whitelist por canal
 * **v1.0**: Personalizado + export/import + refinamentos de UI/estabilidade
@@ -394,7 +394,7 @@ README.md
 
 ## 15) Critérios de aceite (v0.1)
 
-* Em Home, com modo ON + preset Work:
+* Em Home, com modo ON + perfil Work:
 
   * feed infinito não aparece; usuário vê tela de foco com CTAs funcionais.
 * Em Watch:
