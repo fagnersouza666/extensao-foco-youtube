@@ -205,7 +205,7 @@ const createOverlay = () => {
     </style>
     <div class="ytf-card">
       <div class="ytf-tag" data-role="preset">Trabalho/Estudo</div>
-      <h2 class="ytf-title">Modo Foco Ativo</h2>
+      <h2 class="ytf-title">YouTube Foco Ativo</h2>
       <p class="ytf-subtitle">Escolha uma acao intencional para continuar.</p>
       <div class="ytf-actions">
         <button class="ytf-btn primary" data-action="search">Buscar</button>
