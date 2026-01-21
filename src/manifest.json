@@ -17,7 +17,7 @@
     "https://www.youtube.com/*"
   ],
   "background": {
-    "service_worker": "src/background/service_worker.js"
+    "service_worker": "background/service_worker.js"
   },
   "action": {
     "default_title": "YouTube Foco",
@@ -27,7 +27,7 @@
       "48": "assets/icons/48x48.png",
       "128": "assets/icons/128x128.png"
     },
-    "default_popup": "src/ui/popup/popup.html"
+    "default_popup": "html/popup.html"
   },
   "content_scripts": [
     {
@@ -35,8 +35,8 @@
         "https://www.youtube.com/*"
       ],
       "js": [
-        "src/shared/constants.js",
-        "src/content/content_script.js"
+        "shared/constants.js",
+        "content/content_script.js"
       ],
       "run_at": "document_idle"
     }
