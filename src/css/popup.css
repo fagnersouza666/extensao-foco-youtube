@@ -131,3 +131,12 @@ button.primary {
   padding-top: 6px;
   border-top: 1px solid #2a2a2a;
 }
+
+.footer a {
+  color: #4fc3f7;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}

@@ -33,14 +33,43 @@ Não coleta dados e não usa servidor.
 - **Personalizado**: aplica as regras que você marcar no popup (Shorts, Home, Related, autoplay).
 
 ## Estrutura do projeto
-- `manifest.json`
-- `src/background/service_worker.js`
-- `src/content/content_script.js`
-- `src/shared/constants.js`
-- `src/ui/popup/popup.html`
-- `src/ui/popup/popup.js`
-- `src/ui/popup/popup.css`
-- `docs/prd.md`
+```
+├── src/
+│   ├── assets/
+│   │   ├── icons/          # Ícones da extensão
+│   │   └── screenshots/    # Capturas para Chrome Web Store
+│   ├── background/         # Service worker
+│   ├── content/            # Content scripts
+│   ├── css/                # Estilos
+│   ├── html/               # Templates HTML
+│   ├── js/                 # Lógica JavaScript
+│   │   ├── services/       # Serviços (LLM, etc.)
+│   │   └── utils/          # Helpers e utilidades
+│   ├── shared/             # Código compartilhado
+│   └── manifest.json      # Configuração MV3
+├── dist/                  # Build minificado (gerado)
+├── scripts/               # Scripts de build/utilidades
+├── .context/              # Contexto AI
+├── README.md
+└── CHANGELOG.md
+```
+
+### Build
+
+Para gerar a versão minificada:
+
+```bash
+npm install
+npm run build
+```
+
+Ou diretamente:
+
+```bash
+./scripts/build.sh
+```
+
+O build gera a pasta `dist/` com JS/CSS minificados, pronto para produção.
 
 ## Configuração e comportamento
 - Config salva em `chrome.storage.local` com a chave `focusConfig`.
@@ -65,3 +94,8 @@ Para habilitar logs no console, defina `debug: true` no objeto `focusConfig` em 
 - Refinos dos perfis e melhorias da configuração personalizada.
 - Agenda por horário/dia.
 - Whitelist de canais.
+
+## Contato
+- Nome: Fagner Sá de Souza
+- Email: fagnersouza@gmail.com
+- Twitter/X: @Fagner_Souza

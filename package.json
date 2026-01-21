@@ -1,0 +1,13 @@
+{
+  "name": "foco-youtube-extension",
+  "version": "1.0.0",
+  "description": "Extensão do Chrome para foco no YouTube",
+  "scripts": {
+    "build": "./scripts/build.sh"
+  },
+  "devDependencies": {
+    "terser": "^5.27.0",
+    "clean-css-cli": "^5.6.3",
+    "html-minifier-terser": "^7.2.0"
+  }
+}
